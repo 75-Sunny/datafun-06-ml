@@ -150,3 +150,309 @@ will help assess whether the model is useful.
 2026-10-04 18:50:45 | INFO | P06 | ===================================
 2026-10-04 18:50:45 | INFO | P06 | END main() - Executed successfully!
 2026-10-04 18:50:45 | INFO | P06 | ===================================
+2026-10-04 19:36:12 | INFO | P06 | === RUN START ===
+2026-10-04 19:36:12 | INFO | P06 | project=P06 - MULTIPLE LINEAR REGRESSION
+2026-10-04 19:36:12 | INFO | P06 | repo_dir=datafun-06-ml
+2026-10-04 19:36:12 | INFO | P06 | python=3.14.7
+2026-10-04 19:36:12 | INFO | P06 | os=Windows 11
+2026-10-04 19:36:12 | INFO | P06 | shell=powershell
+2026-10-04 19:36:12 | INFO | P06 | cwd=.
+2026-10-04 19:36:12 | INFO | P06 | github_actions=False
+2026-10-04 19:36:12 | INFO | P06 | ===================================
+2026-10-04 19:36:12 | INFO | P06 | START main()
+2026-10-04 19:36:12 | INFO | P06 | ===================================
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | 01. OBSERVE the data and prior findings.
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | data file = data\raw\penguins.csv
+2026-10-04 19:36:12 | INFO | P06 | Data loaded successfully.
+2026-10-04 19:36:12 | INFO | P06 | Grain: one penguin
+2026-10-04 19:36:12 | INFO | P06 | Rows: 344
+2026-10-04 19:36:12 | INFO | P06 | Columns: 8
+2026-10-04 19:36:12 | INFO | P06 | Column names: ['species', 'island', 'bill_length_mm', 'bill_depth_mm', 'flipper_length_mm', 'body_mass_g', 'sex', 'year']
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | 02. DECLARE the target and features.
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | Target: body_mass_g
+2026-10-04 19:36:12 | INFO | P06 | Features: ['bill_length_mm', 'flipper_length_mm']
+2026-10-04 19:36:12 | INFO | P06 | 
+I want to predict body mass.
+
+I selected bill length and flipper length as the features.
+
+A larger penguin may have both a longer bill and
+a longer flipper, so using both measurements may
+provide more information for predicting body mass.
+
+I do not know yet whether using two features will
+predict body mass better than using a simple baseline.
+The modeling process will provide evidence.
+
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | 03. PREPARE the modeling data.
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | Original rows: 344
+2026-10-04 19:36:12 | INFO | P06 | Modeling rows: 342
+2026-10-04 19:36:12 | INFO | P06 | Rows dropped: 2
+2026-10-04 19:36:12 | INFO | P06 | X shape: (342, 2)
+2026-10-04 19:36:12 | INFO | P06 | y shape: (342,)
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | 04. SPLIT into training and test data.
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | 
+I will use 80% of the modeling rows for training
+and hold back 20% for testing.
+
+I want most of the available data to be available
+for learning the model, while still keeping a
+separate set of observations that the model did
+not see during training.
+
+The test rows will be used later to evaluate how
+the trained model performs on unseen observations.
+
+I will use a random seed of 42.
+
+The specific value 42 is not analytically important.
+I use a fixed seed so the random split is reproducible.
+
+2026-10-04 19:36:12 | INFO | P06 | Training rows: 273
+2026-10-04 19:36:12 | INFO | P06 | Test rows: 69
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | 05. BASELINE with a simple reference model.
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | 
+Before evaluating the LinearRegression model,
+I need a simple baseline for comparison.
+
+The baseline will ignore the selected features
+and predict the average body mass from the training
+data for every test observation.
+
+A useful predictive model should improve
+on this simple reference prediction.
+
+2026-10-04 19:36:12 | INFO | P06 | Baseline strategy: mean
+2026-10-04 19:36:12 | INFO | P06 | Baseline RMSE: 751.68
+2026-10-04 19:36:12 | INFO | P06 | Baseline R-squared: -0.002
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | 06. TRAIN a multiple LinearRegression model.
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | 
+I will use LinearRegression with two features.
+
+The model will use bill length and flipper length
+together to predict body mass.
+
+Using two features allows me to test whether combining
+two penguin measurements provides useful information
+for predicting body mass.
+
+The evaluation metrics and residual plot will help
+assess whether the model is useful.
+
+2026-10-04 19:36:12 | INFO | P06 | The model learned these coefficients:
+2026-10-04 19:36:12 | INFO | P06 | bill_length_mm: 3.651
+2026-10-04 19:36:12 | INFO | P06 | flipper_length_mm: 48.923
+2026-10-04 19:36:12 | INFO | P06 | Intercept: -5790.956
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | 07. PREDICT on X_test.
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | Predictions created: 69
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | 08. EVALUATE baseline vs model on y_test.
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | BASELINE RESULTS
+2026-10-04 19:36:12 | INFO | P06 | RMSE:      751.68
+2026-10-04 19:36:12 | INFO | P06 | R-squared: -0.002
+2026-10-04 19:36:12 | INFO | P06 | MULTIPLE LINEAR REGRESSION RESULTS
+2026-10-04 19:36:12 | INFO | P06 | RMSE:      353.71
+2026-10-04 19:36:12 | INFO | P06 | R-squared: 0.778
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:12 | INFO | P06 | 09. VISUALIZE predictions and residuals.
+2026-10-04 19:36:12 | INFO | P06 | -------------------------------
+2026-10-04 19:36:14 | INFO | P06 | Chart saved successfully at docs\images\multiple-regression-predictions.png.
+2026-10-04 19:36:15 | INFO | P06 | Chart saved successfully at docs\images\multiple-regression-residuals.png.
+2026-10-04 19:36:15 | INFO | P06 | -------------------------------
+2026-10-04 19:36:15 | INFO | P06 | 10. ASSESS the results.
+2026-10-04 19:36:15 | INFO | P06 | -------------------------------
+2026-10-04 19:36:15 | INFO | P06 | CUSTOM OBSERVATIONS:
+    I used bill length and flipper length together
+    to predict body mass.
+
+    The baseline RMSE was recorded above.
+
+    The multiple linear regression RMSE was recorded above.
+
+    Compared with the baseline, the LinearRegression model
+    should be evaluated based on whether it produced a
+    lower RMSE and a stronger R-squared result.
+
+    The actual vs. predicted chart shows how closely
+    the predictions compare with the observed body mass.
+
+    The residual plot shows how far the predictions
+    were from the actual values.
+
+    Based on these results, I can determine whether
+    using two features provides useful information
+    for predicting body mass.
+    
+2026-10-04 19:36:15 | INFO | P06 | In a script, call plt.show() at the end to display all charts.
+2026-10-04 19:36:15 | INFO | P06 | Close all chart windows with the close button to continue.
+2026-10-04 19:38:35 | INFO | P06 | ===================================
+2026-10-04 19:38:35 | INFO | P06 | END main() - Executed successfully!
+2026-10-04 19:38:35 | INFO | P06 | ===================================
+2026-10-04 19:43:02 | INFO | P06 | === RUN START ===
+2026-10-04 19:43:02 | INFO | P06 | project=P06 - MULTIPLE LINEAR REGRESSION
+2026-10-04 19:43:02 | INFO | P06 | repo_dir=datafun-06-ml
+2026-10-04 19:43:02 | INFO | P06 | python=3.14.7
+2026-10-04 19:43:02 | INFO | P06 | os=Windows 11
+2026-10-04 19:43:02 | INFO | P06 | shell=powershell
+2026-10-04 19:43:02 | INFO | P06 | cwd=.
+2026-10-04 19:43:02 | INFO | P06 | github_actions=False
+2026-10-04 19:43:02 | INFO | P06 | ===================================
+2026-10-04 19:43:02 | INFO | P06 | START main()
+2026-10-04 19:43:02 | INFO | P06 | ===================================
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | 01. OBSERVE the data and prior findings.
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | data file = data\raw\penguins.csv
+2026-10-04 19:43:02 | INFO | P06 | Data loaded successfully.
+2026-10-04 19:43:02 | INFO | P06 | Grain: one penguin
+2026-10-04 19:43:02 | INFO | P06 | Rows: 344
+2026-10-04 19:43:02 | INFO | P06 | Columns: 8
+2026-10-04 19:43:02 | INFO | P06 | Column names: ['species', 'island', 'bill_length_mm', 'bill_depth_mm', 'flipper_length_mm', 'body_mass_g', 'sex', 'year']
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | 02. DECLARE the target and features.
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | Target: body_mass_g
+2026-10-04 19:43:02 | INFO | P06 | Features: ['bill_length_mm', 'flipper_length_mm']
+2026-10-04 19:43:02 | INFO | P06 | 
+I want to predict body mass.
+
+I selected bill length and flipper length as the features.
+
+A larger penguin may have both a longer bill and
+a longer flipper, so using both measurements may
+provide more information for predicting body mass.
+
+I do not know yet whether using two features will
+predict body mass better than using a simple baseline.
+The modeling process will provide evidence.
+
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | 03. PREPARE the modeling data.
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | Original rows: 344
+2026-10-04 19:43:02 | INFO | P06 | Modeling rows: 342
+2026-10-04 19:43:02 | INFO | P06 | Rows dropped: 2
+2026-10-04 19:43:02 | INFO | P06 | X shape: (342, 2)
+2026-10-04 19:43:02 | INFO | P06 | y shape: (342,)
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | 04. SPLIT into training and test data.
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | 
+I will use 80% of the modeling rows for training
+and hold back 20% for testing.
+
+I want most of the available data to be available
+for learning the model, while still keeping a
+separate set of observations that the model did
+not see during training.
+
+The test rows will be used later to evaluate how
+the trained model performs on unseen observations.
+
+I will use a random seed of 42.
+
+The specific value 42 is not analytically important.
+I use a fixed seed so the random split is reproducible.
+
+2026-10-04 19:43:02 | INFO | P06 | Training rows: 273
+2026-10-04 19:43:02 | INFO | P06 | Test rows: 69
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | 05. BASELINE with a simple reference model.
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | 
+Before evaluating the LinearRegression model,
+I need a simple baseline for comparison.
+
+The baseline will ignore the selected features
+and predict the average body mass from the training
+data for every test observation.
+
+A useful predictive model should improve
+on this simple reference prediction.
+
+2026-10-04 19:43:02 | INFO | P06 | Baseline strategy: mean
+2026-10-04 19:43:02 | INFO | P06 | Baseline RMSE: 751.68
+2026-10-04 19:43:02 | INFO | P06 | Baseline R-squared: -0.002
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | 06. TRAIN a multiple LinearRegression model.
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | 
+I will use LinearRegression with two features.
+
+The model will use bill length and flipper length
+together to predict body mass.
+
+Using two features allows me to test whether combining
+two penguin measurements provides useful information
+for predicting body mass.
+
+The evaluation metrics and residual plot will help
+assess whether the model is useful.
+
+2026-10-04 19:43:02 | INFO | P06 | The model learned these coefficients:
+2026-10-04 19:43:02 | INFO | P06 | bill_length_mm: 3.651
+2026-10-04 19:43:02 | INFO | P06 | flipper_length_mm: 48.923
+2026-10-04 19:43:02 | INFO | P06 | Intercept: -5790.956
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | 07. PREDICT on X_test.
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | Predictions created: 69
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | 08. EVALUATE baseline vs model on y_test.
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | BASELINE RESULTS
+2026-10-04 19:43:02 | INFO | P06 | RMSE:      751.68
+2026-10-04 19:43:02 | INFO | P06 | R-squared: -0.002
+2026-10-04 19:43:02 | INFO | P06 | MULTIPLE LINEAR REGRESSION RESULTS
+2026-10-04 19:43:02 | INFO | P06 | RMSE:      353.71
+2026-10-04 19:43:02 | INFO | P06 | R-squared: 0.778
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:02 | INFO | P06 | 09. VISUALIZE predictions and residuals.
+2026-10-04 19:43:02 | INFO | P06 | -------------------------------
+2026-10-04 19:43:04 | INFO | P06 | Chart saved successfully at docs\images\multiple-regression-predictions.png.
+2026-10-04 19:43:04 | INFO | P06 | Chart saved successfully at docs\images\multiple-regression-residuals.png.
+2026-10-04 19:43:04 | INFO | P06 | -------------------------------
+2026-10-04 19:43:04 | INFO | P06 | 10. ASSESS the results.
+2026-10-04 19:43:04 | INFO | P06 | -------------------------------
+2026-10-04 19:43:04 | INFO | P06 | CUSTOM OBSERVATIONS:
+    I used bill length and flipper length together
+    to predict body mass.
+
+    The baseline RMSE was recorded above.
+
+    The multiple linear regression RMSE was recorded above.
+
+    Compared with the baseline, the LinearRegression model
+    should be evaluated based on whether it produced a
+    lower RMSE and a stronger R-squared result.
+
+    The actual vs. predicted chart shows how closely
+    the predictions compare with the observed body mass.
+
+    The residual plot shows how far the predictions
+    were from the actual values.
+
+    Based on these results, I can determine whether
+    using two features provides useful information
+    for predicting body mass.
+    
+2026-10-04 19:43:04 | INFO | P06 | In a script, call plt.show() at the end to display all charts.
+2026-10-04 19:43:04 | INFO | P06 | Close all chart windows with the close button to continue.
+2026-10-04 20:17:26 | INFO | P06 | ===================================
+2026-10-04 20:17:26 | INFO | P06 | END main() - Executed successfully!
+2026-10-04 20:17:26 | INFO | P06 | ===================================
