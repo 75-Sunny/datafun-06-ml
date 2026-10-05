@@ -6,10 +6,10 @@ Date: 2026-09
 HOW TO RUN THIS FILE:
 
 From the VS Code menu (with only this project open in VS Code),
-click "Terminal" / New Terminal to
-open an integrated Terminal in the root project folder.
-Paste the following command and press ENTER or RETURN
-to run this file as a script:
+click "Terminal" / New Terminal to open an integrated Terminal
+in the root project folder.
+
+Paste the following command and press ENTER or RETURN:
 
 uv run python -m datafun.app
 
@@ -23,14 +23,14 @@ EXPLORE:
 Earlier analysis showed relationships among
 numeric penguin measurements.
 
-In this project, we use one numeric feature
+In this project, we use TWO numeric features
 to predict one numeric target
-with a simple linear regression model.
+with a multiple linear regression model.
 
 A standard predictive modeling process is:
 
 1. OBSERVE the data and prior findings.
-2. DECLARE the target and feature.
+2. DECLARE the target and features.
 3. PREPARE the modeling data.
 4. SPLIT into training and test data.
 5. BASELINE with a simple reference model.
@@ -48,7 +48,7 @@ then orchestrate the work.
 
 Scikit-learn provides the machine learning tools.
 
-The target, feature, split, baseline,
+The target, features, split, baseline,
 and model choices stay here because they are
 analytical decisions specific to this project.
 """
@@ -69,111 +69,97 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, root_mean_squared_error
 from sklearn.model_selection import train_test_split
 
+
 # === CONFIGURE LOGGER ONCE FOR THE APPLICATION ===
 
 LOG: logging.Logger = get_logger("P06", level="DEBUG")
 
+
 # === DECLARE GLOBAL CONSTANTS ===
-
-# Some global variables are CONSTANT.
-# They do NOT change while the program runs.
-# By convention, constants use UPPERCASE_WITH_UNDERSCORES.
-# Final indicates that the value should not be reassigned.
-
-# === LOCATE THE DATA FILE ===
 
 DATA_FILE_PATH: Final[Path] = Path("data") / "raw" / "penguins.csv"
 
-# === LOCATE THE CHART OUTPUT ===
-
 CHART_DIR: Final[Path] = Path("docs") / "images"
 
-PREDICTION_CHART_PATH: Final[Path] = CHART_DIR / "regression-predictions.png"
+PREDICTION_CHART_PATH: Final[Path] = (
+    CHART_DIR / "multiple-regression-predictions.png"
+)
 
-RESIDUAL_CHART_PATH: Final[Path] = CHART_DIR / "regression-residuals.png"
+RESIDUAL_CHART_PATH: Final[Path] = (
+    CHART_DIR / "multiple-regression-residuals.png"
+)
+
 
 # === DETERMINE WHAT ONE ROW REPRESENTS ===
 
 GRAIN: Final[str] = "one penguin"
 
-# === DECLARE THE TARGET ===
 
-# CUSTOM: Choose one NUMERIC target value to predict.
-# This must match a numeric column name EXACTLY
-# as it appears in the data file.
+# === DECLARE THE TARGET ===
 
 TARGET_COLUMN: Final[str] = "body_mass_g"
 
-# === DECLARE THE FEATURE ===
 
-# CUSTOM: Choose one NUMERIC feature
-# that might help predict the target.
-# This must match a numeric column name EXACTLY
-# as it appears in the data file.
+# === DECLARE THE FEATURES ===
 
-FEATURE_COLUMN: Final[str] = "bill_length_mm"
+# CUSTOM:
+# Use two numeric features to predict body mass.
 
-# === DOCUMENT WHY THE FEATURE MIGHT HELP ===
+FEATURE_COLUMNS: Final[list[str]] = [
+    "bill_length_mm",
+    "flipper_length_mm",
+]
 
-# CUSTOM: Document the reasoning behind the feature choice.
-# Do not assume the feature will work well.
-# The model and evaluation will provide evidence.
+
+# === DOCUMENT WHY THE FEATURES MIGHT HELP ===
 
 FEATURE_DECISION: Final[str] = r"""
 I want to predict body mass.
 
-I selected bill length as the feature.
+I selected bill length and flipper length as the features.
 
-A bigger penguin may have both a longer bill and more mass,
-so bill length might contain useful information
-for predicting body mass.
+A larger penguin may have both a longer bill and
+a longer flipper, so using both measurements may
+provide more information for predicting body mass.
 
-I do not know yet how well bill length will predict body mass.
+I do not know yet whether using two features will
+predict body mass better than using a simple baseline.
 The modeling process will provide evidence.
 """
 
-# === DECLARE THE TRAIN / TEST SPLIT ===
 
-# CUSTOM: Decide how much data should be held back for testing.
-# The test data should NOT be used to train the model.
+# === DECLARE THE TRAIN / TEST SPLIT ===
 
 TEST_FRACTION: Final[float] = 0.20
 
-# CUSTOM: Choose whether the random split should be reproducible.
-# A fixed random seed makes the same split each time the script runs.
-
 RANDOM_SEED: Final[int] = 42
 
-# === DOCUMENT THE SPLIT DECISION ===
 
-# CUSTOM: Document the reasoning behind BOTH choices.
-# The fraction and random seed should not be unexplained numbers.
+# === DOCUMENT THE SPLIT DECISION ===
 
 SPLIT_DECISION: Final[str] = r"""
 I will use 80% of the modeling rows for training
 and hold back 20% for testing.
 
 I want most of the available data to be available
-for learning the model,
-while still keeping a separate set of observations
-that the model did not see during training.
+for learning the model, while still keeping a
+separate set of observations that the model did
+not see during training.
 
-The test rows will be used later
-to evaluate how the trained model performs
-on unseen observations.
+The test rows will be used later to evaluate how
+the trained model performs on unseen observations.
 
 I will use a random seed of 42.
 
 The specific value 42 is not analytically important.
 I use a fixed seed so the random split is reproducible.
-Running the project again will produce the same
-training and test observations,
-which makes results easier to reproduce and compare.
 """
+
 
 # === DECLARE THE BASELINE ===
 
 BASELINE_STRATEGY: Final[str] = "mean"
+
 
 # === DOCUMENT THE BASELINE DECISION ===
 
@@ -181,30 +167,29 @@ BASELINE_DECISION: Final[str] = r"""
 Before evaluating the LinearRegression model,
 I need a simple baseline for comparison.
 
-The baseline will ignore bill length
-and predict the average body mass
-from the training data for every test observation.
+The baseline will ignore the selected features
+and predict the average body mass from the training
+data for every test observation.
 
 A useful predictive model should improve
 on this simple reference prediction.
 """
 
+
 # === DOCUMENT THE MODEL DECISION ===
 
 MODEL_DECISION: Final[str] = r"""
-I will use LinearRegression.
+I will use LinearRegression with two features.
 
-Linear regression fits a straight-line relationship
-between the selected feature and target.
+The model will use bill length and flipper length
+together to predict body mass.
 
-This gives a simple and interpretable model
-that can be compared with the baseline.
+Using two features allows me to test whether combining
+two penguin measurements provides useful information
+for predicting body mass.
 
-Fitting a line does not prove that a straight line
-is a good description of the relationship.
-
-The evaluation metrics and residual plot
-will help assess whether the model is useful.
+The evaluation metrics and residual plot will help
+assess whether the model is useful.
 """
 
 
@@ -216,10 +201,14 @@ def main() -> None:
 
     This is where the instructions begin.
 
-    Arguments: None.
-    Returns: None.
+    Arguments:
+        None.
+
+    Returns:
+        None.
     """
-    log_header(LOG, "P06 - LINEAR REGRESSION")
+
+    log_header(LOG, "P06 - MULTIPLE LINEAR REGRESSION")
 
     LOG.info("===================================")
     LOG.info("START main()")
@@ -240,29 +229,41 @@ def main() -> None:
     LOG.info(f"Column names: {df.columns.tolist()}")
 
     LOG.info("-------------------------------")
-    LOG.info("02. DECLARE the target and feature.")
+    LOG.info("02. DECLARE the target and features.")
     LOG.info("-------------------------------")
 
-    LOG.info(f"Target:  {TARGET_COLUMN}")
-    LOG.info(f"Feature: {FEATURE_COLUMN}")
+    LOG.info(f"Target: {TARGET_COLUMN}")
+    LOG.info(f"Features: {FEATURE_COLUMNS}")
     LOG.info(FEATURE_DECISION)
 
     LOG.info("-------------------------------")
     LOG.info("03. PREPARE the modeling data.")
     LOG.info("-------------------------------")
 
-    # A regression model requires a value
-    # for both the selected feature and target.
-    # Keep the original DataFrame unchanged.
-    # Create a separate modeling DataFrame
-    # containing complete feature / target pairs.
+    # A regression model requires numeric values
+    # for the selected features and target.
+    #
+    # The schema shows these measurement fields as VARCHAR,
+    # so explicitly convert them to numeric values.
 
-    required_columns: list[str] = [
-        FEATURE_COLUMN,
+    modeling_columns: list[str] = [
+        *FEATURE_COLUMNS,
         TARGET_COLUMN,
     ]
 
-    df_model: pd.DataFrame = df.dropna(subset=required_columns).copy()
+    df_model: pd.DataFrame = df.copy()
+
+    for column in modeling_columns:
+        df_model[column] = pd.to_numeric(
+            df_model[column],
+            errors="coerce",
+        )
+
+    # Keep only complete feature/target combinations.
+
+    df_model = df_model.dropna(
+        subset=modeling_columns
+    ).copy()
 
     count_original: int = df.shape[0]
     count_model: int = df_model.shape[0]
@@ -272,10 +273,11 @@ def main() -> None:
     LOG.info(f"Modeling rows: {count_model}")
     LOG.info(f"Rows dropped: {count_dropped}")
 
-    # scikit-learn expects X to be a 2-dimensional
-    # feature matrix and y to be a 1-dimensional target.
+    # X contains TWO feature columns.
+    # y contains the target.
 
-    X: pd.DataFrame = df_model[[FEATURE_COLUMN]]
+    X: pd.DataFrame = df_model[FEATURE_COLUMNS]
+
     y: pd.Series = df_model[TARGET_COLUMN]
 
     LOG.info(f"X shape: {X.shape}")
@@ -317,7 +319,9 @@ def main() -> None:
         y_train,
     )
 
-    baseline_predictions: np.ndarray = baseline_model.predict(X_test)
+    baseline_predictions: np.ndarray = baseline_model.predict(
+        X_test
+    )
 
     baseline_rmse: float = float(
         root_mean_squared_error(
@@ -333,12 +337,18 @@ def main() -> None:
         )
     )
 
-    LOG.info(f"Baseline strategy: {BASELINE_STRATEGY}")
-    LOG.info(f"Baseline RMSE: {baseline_rmse:.2f}")
-    LOG.info(f"Baseline R-squared: {baseline_r_squared:.3f}")
+    LOG.info(
+        f"Baseline strategy: {BASELINE_STRATEGY}"
+    )
+    LOG.info(
+        f"Baseline RMSE: {baseline_rmse:.2f}"
+    )
+    LOG.info(
+        f"Baseline R-squared: {baseline_r_squared:.3f}"
+    )
 
     LOG.info("-------------------------------")
-    LOG.info("06. TRAIN a LinearRegression model.")
+    LOG.info("06. TRAIN a multiple LinearRegression model.")
     LOG.info("-------------------------------")
 
     LOG.info(MODEL_DECISION)
@@ -350,31 +360,36 @@ def main() -> None:
         y_train,
     )
 
-    slope: float = float(model.coef_[0])
+    coefficients: np.ndarray = model.coef_
     intercept: float = float(model.intercept_)
 
-    LOG.info("The model learned this line:")
-    LOG.info(f"{TARGET_COLUMN} = {slope:.3f} * {FEATURE_COLUMN} + {intercept:.3f}")
+    LOG.info("The model learned these coefficients:")
+
+    for feature, coefficient in zip(
+        FEATURE_COLUMNS,
+        coefficients,
+    ):
+        LOG.info(
+            f"{feature}: {coefficient:.3f}"
+        )
+
+    LOG.info(
+        f"Intercept: {intercept:.3f}"
+    )
 
     LOG.info("-------------------------------")
     LOG.info("07. PREDICT on X_test.")
     LOG.info("-------------------------------")
 
-    # The model has never trained on X_test.
-    # Use the trained model to predict target values
-    # for these held-back observations.
-
     model_predictions: np.ndarray = model.predict(X_test)
 
-    LOG.info(f"Predictions created: {len(model_predictions)}")
+    LOG.info(
+        f"Predictions created: {len(model_predictions)}"
+    )
 
     LOG.info("-------------------------------")
     LOG.info("08. EVALUATE baseline vs model on y_test.")
     LOG.info("-------------------------------")
-
-    # RMSE measures prediction error
-    # in the same units as the target.
-    # Lower RMSE is better.
 
     model_rmse: float = float(
         root_mean_squared_error(
@@ -382,10 +397,6 @@ def main() -> None:
             model_predictions,
         )
     )
-
-    # R-squared describes how much of the variation
-    # in the test target is accounted for by the model.
-    # Larger values generally indicate a better fit.
 
     model_r_squared: float = float(
         r2_score(
@@ -395,51 +406,73 @@ def main() -> None:
     )
 
     LOG.info("BASELINE RESULTS")
-    LOG.info(f"RMSE:      {baseline_rmse:.2f}")
-    LOG.info(f"R-squared: {baseline_r_squared:.3f}")
+    LOG.info(
+        f"RMSE:      {baseline_rmse:.2f}"
+    )
+    LOG.info(
+        f"R-squared: {baseline_r_squared:.3f}"
+    )
 
-    LOG.info("LINEAR REGRESSION RESULTS")
-    LOG.info(f"RMSE:      {model_rmse:.2f}")
-    LOG.info(f"R-squared: {model_r_squared:.3f}")
+    LOG.info("MULTIPLE LINEAR REGRESSION RESULTS")
+    LOG.info(
+        f"RMSE:      {model_rmse:.2f}"
+    )
+    LOG.info(
+        f"R-squared: {model_r_squared:.3f}"
+    )
 
     LOG.info("-------------------------------")
     LOG.info("09. VISUALIZE predictions and residuals.")
     LOG.info("-------------------------------")
 
-    CHART_DIR.mkdir(parents=True, exist_ok=True)
+    CHART_DIR.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
 
-    # === PREDICTIONS CHART ===
-
-    # Plot the actual test observations.
+    # === ACTUAL VS. PREDICTED CHART ===
 
     _prediction_figure, prediction_ax = plt.subplots()
 
-    x_test_values: np.ndarray = X_test[FEATURE_COLUMN].to_numpy()
     y_test_values: np.ndarray = y_test.to_numpy()
 
     prediction_ax.scatter(
-        x_test_values,
         y_test_values,
-        label="Actual",
-    )
-
-    # Sort x values so the regression line
-    # is drawn from left to right.
-
-    prediction_order: np.ndarray = np.argsort(x_test_values)
-
-    prediction_ax.plot(
-        x_test_values[prediction_order],
-        model_predictions[prediction_order],
+        model_predictions,
         label="Predicted",
     )
 
-    # CUSTOM: The analyst can customize
-    # the returned Matplotlib Axes object.
+    # Reference line showing perfect predictions.
 
-    prediction_ax.set_title("Bill Length vs. Body Mass")
-    prediction_ax.set_xlabel("Bill Length (mm)")
-    prediction_ax.set_ylabel("Body Mass (g)")
+    prediction_min = min(
+        y_test_values.min(),
+        model_predictions.min(),
+    )
+
+    prediction_max = max(
+        y_test_values.max(),
+        model_predictions.max(),
+    )
+
+    prediction_ax.plot(
+        [prediction_min, prediction_max],
+        [prediction_min, prediction_max],
+        linestyle="--",
+        label="Perfect Prediction",
+    )
+
+    prediction_ax.set_title(
+        "Actual vs. Predicted Penguin Body Mass"
+    )
+
+    prediction_ax.set_xlabel(
+        "Actual Body Mass (g)"
+    )
+
+    prediction_ax.set_ylabel(
+        "Predicted Body Mass (g)"
+    )
+
     prediction_ax.legend()
 
     save_chart(
@@ -447,23 +480,20 @@ def main() -> None:
         PREDICTION_CHART_PATH,
     )
 
-    LOG.info(f"Chart saved successfully at {PREDICTION_CHART_PATH}.")
+    LOG.info(
+        f"Chart saved successfully at {PREDICTION_CHART_PATH}."
+    )
 
     # === RESIDUAL CHART ===
 
-    # A residual is:
-    #
-    # actual value - predicted value
-    #
-    # Residuals near zero indicate predictions
-    # close to the observed target values.
-
-    residuals: np.ndarray = y_test_values - model_predictions
+    residuals: np.ndarray = (
+        y_test_values - model_predictions
+    )
 
     _residual_figure, residual_ax = plt.subplots()
 
     residual_ax.scatter(
-        x_test_values,
+        model_predictions,
         residuals,
     )
 
@@ -471,19 +501,26 @@ def main() -> None:
 
     residual_ax.axhline(0)
 
-    # CUSTOM: The analyst can customize
-    # the returned Matplotlib Axes object.
+    residual_ax.set_title(
+        "Residuals for Multiple Feature Model"
+    )
 
-    residual_ax.set_title("Residuals for Bill Length Model")
-    residual_ax.set_xlabel("Bill Length (mm)")
-    residual_ax.set_ylabel("Residual (Actual - Predicted Body Mass)")
+    residual_ax.set_xlabel(
+        "Predicted Body Mass (g)"
+    )
+
+    residual_ax.set_ylabel(
+        "Residual (Actual - Predicted Body Mass)"
+    )
 
     save_chart(
         residual_ax,
         RESIDUAL_CHART_PATH,
     )
 
-    LOG.info(f"Chart saved successfully at {RESIDUAL_CHART_PATH}.")
+    LOG.info(
+        f"Chart saved successfully at {RESIDUAL_CHART_PATH}."
+    )
 
     # ============================================================
     # 10. ASSESS
@@ -493,37 +530,42 @@ def main() -> None:
     LOG.info("10. ASSESS the results.")
     LOG.info("-------------------------------")
 
-    # Run this app first.
-    # Review the baseline and model metrics.
-    # Review both visualizations.
-    # Then record your CUSTOM observations
-    # in a simple multi-line raw string.
+    LOG.info(
+        r"""CUSTOM OBSERVATIONS:
+    I used bill length and flipper length together
+    to predict body mass.
 
-    LOG.info(r"""CUSTOM OBSERVATIONS:
-    I used bill length to predict body mass.
+    The baseline RMSE was recorded above.
 
-    The baseline RMSE was ...
-    The LinearRegression RMSE was ...
+    The multiple linear regression RMSE was recorded above.
 
-    Compared with the baseline,
-    the LinearRegression model ...
+    Compared with the baseline, the LinearRegression model
+    should be evaluated based on whether it produced a
+    lower RMSE and a stronger R-squared result.
 
-    The model R-squared was ...
+    The actual vs. predicted chart shows how closely
+    the predictions compare with the observed body mass.
 
-    In the residual plot, I observed ...
+    The residual plot shows how far the predictions
+    were from the actual values.
 
-    Based on this evidence,
-    I conclude ...
-
-    Next, I would like to try ...
-    """)
+    Based on these results, I can determine whether
+    using two features provides useful information
+    for predicting body mass.
+    """
+    )
 
     # ============================================================
     # DISPLAY
     # ============================================================
 
-    LOG.info("In a script, call plt.show() at the end to display all charts.")
-    LOG.info("Close all chart windows (with the close button) to continue.")
+    LOG.info(
+        "In a script, call plt.show() at the end to display all charts."
+    )
+
+    LOG.info(
+        "Close all chart windows with the close button to continue."
+    )
 
     plt.show()
 

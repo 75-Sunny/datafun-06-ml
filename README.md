@@ -93,7 +93,7 @@ Follow the guide for the **full instructions**.
 Open a machine terminal in your `Repos` folder:
 
 ```shell
-git clone https://github.com/denisecase/datafun-06-ml
+git clone https://github.com/75-Sunny/datafun-06-ml
 
 cd datafun-06-ml
 code .

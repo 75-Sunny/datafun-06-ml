@@ -10,8 +10,8 @@
 
 [project]
 site_name = "Docs" # CUSTOM: Set the name that appears in the browser tab.
-site_url = "https://denisecase.github.io/datafun-06-ml/"
-repo_url = "https://github.com/denisecase/datafun-06-ml"
+site_url = "https://75-Sunny.github.io/datafun-06-ml/"
+repo_url = "https://github.com/75-Sunny/datafun-06-ml"
 repo_name = "datafun-06-ml"
 site_description = "Project Documentation" # CUSTOM: Set the description.
 docs_dir = "docs" # source directory for documentation markdown files
@@ -25,7 +25,7 @@ extra_javascript = [
 [project.extra]
 # WHY: Social links provide easy access to project repositories and profiles.
 social = [
-    {icon = "fontawesome/brands/github", link = "https://github.com/denisecase/datafun-06-ml" },
+    {icon = "fontawesome/brands/github", link = "https://github.com/75-Sunny/datafun-06-ml" },
 ]
 
 [project.markdown_extensions]
