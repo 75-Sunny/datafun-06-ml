@@ -1,0 +1,152 @@
+2026-10-04 18:36:55 | INFO | P06 | === RUN START ===
+2026-10-04 18:36:55 | INFO | P06 | project=P06 - LINEAR REGRESSION
+2026-10-04 18:36:55 | INFO | P06 | repo_dir=datafun-06-ml
+2026-10-04 18:36:55 | INFO | P06 | python=3.14.7
+2026-10-04 18:36:55 | INFO | P06 | os=Windows 11
+2026-10-04 18:36:55 | INFO | P06 | shell=powershell
+2026-10-04 18:36:55 | INFO | P06 | cwd=.
+2026-10-04 18:36:55 | INFO | P06 | github_actions=False
+2026-10-04 18:36:55 | INFO | P06 | ===================================
+2026-10-04 18:36:55 | INFO | P06 | START main()
+2026-10-04 18:36:55 | INFO | P06 | ===================================
+2026-10-04 18:36:55 | INFO | P06 | -------------------------------
+2026-10-04 18:36:55 | INFO | P06 | 01. OBSERVE the data and prior findings.
+2026-10-04 18:36:55 | INFO | P06 | -------------------------------
+2026-10-04 18:36:55 | INFO | P06 | data file = data\raw\penguins.csv
+2026-10-04 18:36:55 | INFO | P06 | Data loaded successfully.
+2026-10-04 18:36:55 | INFO | P06 | Grain: one penguin
+2026-10-04 18:36:55 | INFO | P06 | Rows: 344
+2026-10-04 18:36:55 | INFO | P06 | Columns: 8
+2026-10-04 18:36:55 | INFO | P06 | Column names: ['species', 'island', 'bill_length_mm', 'bill_depth_mm', 'flipper_length_mm', 'body_mass_g', 'sex', 'year']
+2026-10-04 18:36:55 | INFO | P06 | -------------------------------
+2026-10-04 18:36:55 | INFO | P06 | 02. DECLARE the target and feature.
+2026-10-04 18:36:55 | INFO | P06 | -------------------------------
+2026-10-04 18:36:55 | INFO | P06 | Target:  body_mass_g
+2026-10-04 18:36:55 | INFO | P06 | Feature: bill_length_mm
+2026-10-04 18:36:55 | INFO | P06 | 
+I want to predict body mass.
+
+I selected bill length as the feature.
+
+A bigger penguin may have both a longer bill and more mass,
+so bill length might contain useful information
+for predicting body mass.
+
+I do not know yet how well bill length will predict body mass.
+The modeling process will provide evidence.
+
+2026-10-04 18:36:55 | INFO | P06 | -------------------------------
+2026-10-04 18:36:55 | INFO | P06 | 03. PREPARE the modeling data.
+2026-10-04 18:36:55 | INFO | P06 | -------------------------------
+2026-10-04 18:36:55 | INFO | P06 | Original rows: 344
+2026-10-04 18:36:55 | INFO | P06 | Modeling rows: 342
+2026-10-04 18:36:55 | INFO | P06 | Rows dropped: 2
+2026-10-04 18:36:55 | INFO | P06 | X shape: (342, 1)
+2026-10-04 18:36:55 | INFO | P06 | y shape: (342,)
+2026-10-04 18:36:55 | INFO | P06 | -------------------------------
+2026-10-04 18:36:55 | INFO | P06 | 04. SPLIT into training and test data.
+2026-10-04 18:36:55 | INFO | P06 | -------------------------------
+2026-10-04 18:36:55 | INFO | P06 | 
+I will use 80% of the modeling rows for training
+and hold back 20% for testing.
+
+I want most of the available data to be available
+for learning the model,
+while still keeping a separate set of observations
+that the model did not see during training.
+
+The test rows will be used later
+to evaluate how the trained model performs
+on unseen observations.
+
+I will use a random seed of 42.
+
+The specific value 42 is not analytically important.
+I use a fixed seed so the random split is reproducible.
+Running the project again will produce the same
+training and test observations,
+which makes results easier to reproduce and compare.
+
+2026-10-04 18:36:55 | INFO | P06 | Training rows: 273
+2026-10-04 18:36:55 | INFO | P06 | Test rows: 69
+2026-10-04 18:36:55 | INFO | P06 | -------------------------------
+2026-10-04 18:36:55 | INFO | P06 | 05. BASELINE with a simple reference model.
+2026-10-04 18:36:55 | INFO | P06 | -------------------------------
+2026-10-04 18:36:55 | INFO | P06 | 
+Before evaluating the LinearRegression model,
+I need a simple baseline for comparison.
+
+The baseline will ignore bill length
+and predict the average body mass
+from the training data for every test observation.
+
+A useful predictive model should improve
+on this simple reference prediction.
+
+2026-10-04 18:36:55 | INFO | P06 | Baseline strategy: mean
+2026-10-04 18:36:55 | INFO | P06 | Baseline RMSE: 751.68
+2026-10-04 18:36:55 | INFO | P06 | Baseline R-squared: -0.002
+2026-10-04 18:36:55 | INFO | P06 | -------------------------------
+2026-10-04 18:36:55 | INFO | P06 | 06. TRAIN a LinearRegression model.
+2026-10-04 18:36:55 | INFO | P06 | -------------------------------
+2026-10-04 18:36:55 | INFO | P06 | 
+I will use LinearRegression.
+
+Linear regression fits a straight-line relationship
+between the selected feature and target.
+
+This gives a simple and interpretable model
+that can be compared with the baseline.
+
+Fitting a line does not prove that a straight line
+is a good description of the relationship.
+
+The evaluation metrics and residual plot
+will help assess whether the model is useful.
+
+2026-10-04 18:36:55 | INFO | P06 | The model learned this line:
+2026-10-04 18:36:55 | INFO | P06 | body_mass_g = 85.343 * bill_length_mm + 454.089
+2026-10-04 18:36:55 | INFO | P06 | -------------------------------
+2026-10-04 18:36:55 | INFO | P06 | 07. PREDICT on X_test.
+2026-10-04 18:36:55 | INFO | P06 | -------------------------------
+2026-10-04 18:36:55 | INFO | P06 | Predictions created: 69
+2026-10-04 18:36:55 | INFO | P06 | -------------------------------
+2026-10-04 18:36:55 | INFO | P06 | 08. EVALUATE baseline vs model on y_test.
+2026-10-04 18:36:55 | INFO | P06 | -------------------------------
+2026-10-04 18:36:56 | INFO | P06 | BASELINE RESULTS
+2026-10-04 18:36:56 | INFO | P06 | RMSE:      751.68
+2026-10-04 18:36:56 | INFO | P06 | R-squared: -0.002
+2026-10-04 18:36:56 | INFO | P06 | LINEAR REGRESSION RESULTS
+2026-10-04 18:36:56 | INFO | P06 | RMSE:      565.76
+2026-10-04 18:36:56 | INFO | P06 | R-squared: 0.433
+2026-10-04 18:36:56 | INFO | P06 | -------------------------------
+2026-10-04 18:36:56 | INFO | P06 | 09. VISUALIZE predictions and residuals.
+2026-10-04 18:36:56 | INFO | P06 | -------------------------------
+2026-10-04 18:36:57 | INFO | P06 | Chart saved successfully at docs\images\regression-predictions.png.
+2026-10-04 18:36:58 | INFO | P06 | Chart saved successfully at docs\images\regression-residuals.png.
+2026-10-04 18:36:58 | INFO | P06 | -------------------------------
+2026-10-04 18:36:58 | INFO | P06 | 10. ASSESS the results.
+2026-10-04 18:36:58 | INFO | P06 | -------------------------------
+2026-10-04 18:36:58 | INFO | P06 | CUSTOM OBSERVATIONS:
+    I used bill length to predict body mass.
+
+    The baseline RMSE was ...
+    The LinearRegression RMSE was ...
+
+    Compared with the baseline,
+    the LinearRegression model ...
+
+    The model R-squared was ...
+
+    In the residual plot, I observed ...
+
+    Based on this evidence,
+    I conclude ...
+
+    Next, I would like to try ...
+    
+2026-10-04 18:36:58 | INFO | P06 | In a script, call plt.show() at the end to display all charts.
+2026-10-04 18:36:58 | INFO | P06 | Close all chart windows (with the close button) to continue.
+2026-10-04 18:50:45 | INFO | P06 | ===================================
+2026-10-04 18:50:45 | INFO | P06 | END main() - Executed successfully!
+2026-10-04 18:50:45 | INFO | P06 | ===================================
